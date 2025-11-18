@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import datauser as us
-import datetimethr
+import datetimethrfgrjyrj
 
 user = us.datauser("Test 1","123456789","0")
 

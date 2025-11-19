@@ -2,8 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import datauser as us
 
-
-user = us.datauser("Test 1","123456789","0")
+user = us.datauser("Dosen", "dosen123", "0", "admin")
 
 class MainApp:
     def __init__(self,root):
@@ -32,12 +31,12 @@ class MainApp:
         password = self.entry_password.get()
         print("Username:", username)
         print("Password:", password)
-        user_login =  user.panggil_user(username,password)
-        print(user_login)
+        datauser =  user.panggil_user(username,password)
+        print(datauser)
 
-        if len(user_login):
+        if len(datauser):
             print("login berhasil")
-            print(f"anda login sebagai {user_login[2]}")
+            print(f"anda login sebagai {datauser[4]}")
              
         else:
             print("Username or Password salah")

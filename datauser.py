@@ -1,29 +1,65 @@
+# import database
+# import random
+
+# def generate_rekening():
+#     return str(random.randint(100000, 999999))
+
+# class datauser:
+#     def __init__(self, Username_us, Password_us, Balance, Role_us):
+#         self.No_rek = generate_rekening()
+#         self.Username_us = Username_us
+#         self.Password_us = Password_us
+#         self.Role_us = Role_us
+#         self.Balance = Balance
+    
+#     def insert_user(self) :
+#         database.db.cursor.execute(f"INSERT INTO datauser VALUES( '{self.No_rek}','{self.Username_us}','{self.Password_us}','{self.Balance}','{self.Role_us}')")
+#         database.db.mydb.commit()
+
+#         # print("Data sudah masuk")
+
+#     def panggil_user(self, Username_us, Password_us):
+#         database.db.cursor.execute(f"SELECT * FROM datauser WHERE username_us = '{Username_us}' AND password_us = '{Password_us}'")
+#         returnData = database.db.cursor.fetchone()
+#         return returnData
+
+# #Pemanggilan
+# Datauser= datauser("Dosen", "dosen123", "0", "admin")
+# Datauser.insert_user()
+
 import database
 import random
 
 def generate_rekening():
     return str(random.randint(100000, 999999))
 
-class datauser:
-    def __init__(self, Username_us, Password_us, Balance, Role_us):
-        self.No_rek = generate_rekening()
-        self.Username_us = Username_us
-        self.Password_us = Password_us
-        self.Role_us = Role_us
-        self.Balance = Balance
+class DataUser:
+    def __init__(self, username_us, password_us, balance, role_us):
+        self.no_rek = generate_rekening()
+        self.username_us = username_us
+        self.password_us = password_us
+        self.balance = balance
+        self.role_us = role_us
     
-    def insert_user(self) :
-        database.db.cursor.execute(f"INSERT INTO datauser VALUES( '{self.No_rek}','{self.Username_us}','{self.Password_us}','{self.Balance}','{self.Role_us}')")
+    def insert_user(self):
+        query = """
+            INSERT INTO datauser (no_rek, username_us, password_us, balance, role_us)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        values = (self.no_rek, self.username_us, self.password_us, self.balance, self.role_us)
+
+        database.db.cursor.execute(query, values)
         database.db.mydb.commit()
 
-        # print("Data sudah masuk")
+        print("User berhasil ditambahkan! Rek:", self.no_rek)
 
-    def panggil_user(self, Username_us, Password_us):
-        database.db.cursor.execute(f"SELECT * FROM datauser WHERE username_us = '{Username_us}' AND password_us = '{Password_us}'")
-        returnData = database.db.cursor.fetchone()
-        return returnData
+    def panggil_user(self, username_us, password_us):
+        query = "SELECT * FROM datauser WHERE username_us = %s AND password_us = %s"
+        values = (username_us, password_us)
+        database.db.cursor.execute(query, values)
+        return database.db.cursor.fetchone()
 
-#Pemanggilan
-Datauser= datauser("Dosen", "dosen123", "0", "admin")
-Datauser.insert_user()
+# Pemanggilan
+Datauser = DataUser("Dosen", "dosen123", 0, "admin")
+# Datauser.insert_user()
 

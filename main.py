@@ -2,12 +2,12 @@ from tkinter import *
 from tkinter import ttk
 import datauser as us
 
-user = us.datauser("Dosen", "dosen123", "0", "admin")
+user = us.DataUser("Dosen", "dosen123", "0", "admin")
 
 class MainApp:
     def __init__(self,root):
         self.root = root
-        self.root.title("Mbanking-Angelino")
+        self.root.title("Mbanking-Kelompok1")
         self.root.geometry("480x210")
 
         self.label = ttk.Label(root, text="Username")
@@ -36,7 +36,7 @@ class MainApp:
 
         if len(datauser):
             print("login berhasil")
-            print(f"anda login sebagai {datauser[4]}")
+            print(f"anda login sebagai {datauser[5]}")
              
         else:
             print("Username or Password salah")

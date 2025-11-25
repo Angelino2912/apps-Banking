@@ -6,7 +6,7 @@ class database:
             host="localhost",
             user="root",
             password = "",
-            database="db.database"
+            database="database"
         )
         
         self.cursor = self.mydb.cursor()

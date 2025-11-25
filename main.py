@@ -13,7 +13,7 @@ class MainApp:
         self.root.geometry("600x410")
         self.root.configure(bg="#fd83f1")
 
-        self.title = tk.Label(self.root, text="Hallo Kamu!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
+        self.title = tk.Label(self.root, text="Hallo Kamu!!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
         self.title.pack(pady=(20, 20))
 
         self.label = ttk.Label(root, text="Username",background="#fd83f1", font=("Comic Sans MS", 13, "bold"))

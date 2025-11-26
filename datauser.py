@@ -58,6 +58,10 @@ class DataUser:
         values = (username_us, password_us)
         database.db.cursor.execute(query, values)
         return database.db.cursor.fetchone()
+    
+    def update_datauser (self):
+        sql = f"UPDATE datauser SET username_us = %s,password_us = %s,balance = %s,role_us = %s WHERE no_rek IN(%s)"
+        data = (self.username_us,self.password_us,self.balance,self.role_us,self.no_rek)
 
 # Pemanggilan
 Datauser = DataUser("Dosen", "dosen123", 0, "admin")

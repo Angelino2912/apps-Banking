@@ -11,7 +11,7 @@ class MainApp:
         self.root = root
         self.root.title("Mbanking-Kelompok1")
         self.root.geometry("600x410")
-        self.root.configure(bg="#fd83f1")
+        self.root.configure(bg="#2A1F3D")
 
         self.title = tk.Label(self.root, text="Hallo Kamu!!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
         self.title.pack(pady=(20, 20))

@@ -63,6 +63,8 @@ class DataUser:
         sql = f"UPDATE datauser SET username_us = %s,password_us = %s,balance = %s,role_us = %s WHERE no_rek IN(%s)"
         data = (self.username_us,self.password_us,self.balance,self.role_us,self.no_rek)
 
+        update_result = database.execute_sql(sql,data)
+
 # Pemanggilan
 Datauser = DataUser("Dosen", "dosen123", 0, "admin")
 # Datauser.insert_user()

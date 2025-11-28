@@ -10,7 +10,7 @@ class MainApp:
 
     def __init__(self,root):
         self.root = root
-        self.root.title("Mbanking-Kelompok1")
+        self.root.title("Login page")
         self.root.geometry("600x410")
         self.root.configure(bg="#2A1F3D")
 
@@ -47,10 +47,16 @@ class MainApp:
             
         else :
             messagebox.showerror("Failed", "Invalid username or password")
+            self.clear_window()
              
 
     def admin_login(self):
         self.clear_window()
+
+        self.root.title("admin login")
+        self.root.geometry("600x410")
+        self.root.configure(bg="#2A1F3D")
+        
         tk.Label(self.root, text="MENU ADMIN BANK", font=("Arial", 16)).pack(pady=20)
 
         tk.Button(self.root, text="Lihat Nasabah", width=25).pack(pady=5)

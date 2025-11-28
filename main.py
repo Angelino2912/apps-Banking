@@ -39,16 +39,15 @@ class MainApp:
         print("Password:", password)
         datauser =  user.panggil_user(username,password)
         print(datauser)
-        self.admin_login()
+       
+        if datauser is not None:
+            nama = datauser[2]   
 
-        if len(datauser):
             messagebox.showinfo("Success", f"Welcome {datauser[5]}!")
-            self.admin_login()
-            
-        else :
+            self.admin_login()  
+
+        else:
             messagebox.showerror("Failed", "Invalid username or password")
-            self.clear_window()
-             
 
     def admin_login(self):
         self.clear_window()
@@ -64,8 +63,14 @@ class MainApp:
         tk.Button(self.root, text="Blokir Nasabah", width=25).pack(pady=5)
         tk.Button(self.root, text="Lihat Transaksi", width=25).pack(pady=5)
         tk.Button(self.root, text="Keluar", width=25, command=root.quit).pack(pady=20)
+    
+    def lihat_nasabah(self):
+         
 
 
+
+    
+    
     def clear_window(self):
 	    for widget in self.root.winfo_children():
 	        widget.destroy()

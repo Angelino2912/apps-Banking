@@ -12,17 +12,17 @@ class MainApp:
         self.root = root
         self.root.title("Login page")
         self.root.geometry("600x410")
-        self.root.configure(bg="#2A1F3D")
+        self.root.configure(bg="#FFFFFF")
 
         self.title = tk.Label(self.root, text="Hallo Kamu!!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
         self.title.pack(pady=(20, 20))
 
-        self.label = ttk.Label(root, text="Username",background="#83f9fd", font=("Comic Sans MS", 13, "bold"))
+        self.label = ttk.Label(root, text="Username",background="#ffffff", font=("Comic Sans MS", 13, "bold"))
         self.label.pack()
         self.entry_username = ttk.Entry(self.root, width=30)
         self.entry_username.pack(pady=(0,10))
 
-        self.label = ttk.Label(root, text="Passsword",background="#83d4fd", font=("Comic Sans MS", 13, "bold") )
+        self.label = ttk.Label(root, text="Passsword",background="#ffffff", font=("Comic Sans MS", 13, "bold") )
         self.label.pack()
         self.entry_password = ttk.Entry(self.root,show="*", width=30)
         self.entry_password.pack(pady=(0,20))
@@ -64,16 +64,16 @@ class MainApp:
         tk.Button(self.root, text="Lihat Transaksi", width=25).pack(pady=5)
         tk.Button(self.root, text="Keluar", width=25, command=root.quit).pack(pady=20)
     
-    def lihat_nasabah(self):
+    # def lihat_nasabah(self):
          
 
 
 
     
     
-    def clear_window(self):
-	    for widget in self.root.winfo_children():
-	        widget.destroy()
+    # def clear_window(self):
+	#     for widget in self.root.winfo_children():
+	#         widget.destroy()
 root = Tk()
 app = MainApp(root)
 root.mainloop()

@@ -3,7 +3,14 @@ from tkinter import *
 from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
+import session as sess
+from tkinter import filedialog
+import session as sess
 
+
+
+
+# current_session = sess.Session()
 user = us.DataUser("Dosen", "dosen123", "0", "admin")
 
 class MainApp:
@@ -58,13 +65,31 @@ class MainApp:
         
         tk.Label(self.root, text="MENU ADMIN BANK", font=("Arial", 16)).pack(pady=20)
 
-        tk.Button(self.root, text="Lihat Nasabah", width=25).pack(pady=5)
+        tk.Button(self.root, text="Lihat Nasabah", width=25, command=self.lihat_nasabah).pack(pady=5)
         tk.Button(self.root, text="Tambah Nasabah", width=25).pack(pady=5)
         tk.Button(self.root, text="Blokir Nasabah", width=25).pack(pady=5)
         tk.Button(self.root, text="Lihat Transaksi", width=25).pack(pady=5)
         tk.Button(self.root, text="Keluar", width=25, command=root.quit).pack(pady=20)
     
     def lihat_nasabah(self):
+        self.clear_window()
+     
+        self.root.title("nasabah page")
+        self.root.geometry("600x410")
+        self.root.configure(bg="#2A1F3D")
+
+        self.label = ttk.Label (root, text=datauser,background="#83f9fd", font=("Comic Sans MS", 13, "bold"))
+        datauser =  user.ambil_customer()
+        print(datauser)
+       
+       
+        
+
+
+
+        
+       
+         
          
 
 
@@ -74,6 +99,12 @@ class MainApp:
     def clear_window(self):
 	    for widget in self.root.winfo_children():
 	        widget.destroy()
+
+    # def clear_content(self):
+	#     if hasattr(self, "content_frame") and self.content_frame.winfo_exists():
+	#         for widget in self.content_frame.winfo_children():
+	#             widget.destroy()
+
 root = Tk()
 app = MainApp(root)
 root.mainloop()

@@ -89,6 +89,9 @@ class MainApp:
         datauser = user_repo.ambil_user()
         print(datauser)
 
+        data_customer = [row for row in datauser if row.role_us == "customer"]
+
+
         columns = ("username_us", "password_us", "balance", "role_us")
         tree = ttk.Treeview(self.root, columns=columns, show="headings")
         tree.pack(fill="both", expand=True, padx=20, pady=20)
@@ -97,7 +100,8 @@ class MainApp:
             tree.heading(col, text=col)
             tree.column(col, width=120, anchor="center")
 
-        for row in datauser:
+        
+        for row in data_customer:
             tree.insert("", "end", values=row.as_tuple())
 
 

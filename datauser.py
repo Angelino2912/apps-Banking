@@ -62,13 +62,16 @@ class DataUser:
 
         update_result = database.execute_sql(sql,data)
 
+datauser = DataUser("cust", "cust123", 100, "customer")
+# datauser.insert_user()
+
 class UserRepository:
 
     def __init__(self):
         self.db = database.db   
 
     def ambil_user(self):
-        sql = "SELECT username_us, password_us, balance, role_us FROM datauser"
+        sql = "SELECT username_us, password_us, balance, role_us FROM datauser WHERE role_us = 'customer'"
         self.db.cursor.execute(sql)
         results = self.db.cursor.fetchall()
 
@@ -86,6 +89,7 @@ class UserRepository:
         return self.db.cursor.fetchone()
     
 # Pemanggilan
-Datauser = DataUser("Dosen", "dosen123", 0, "admin")
-# Datauser.insert_user()
+# datauser = DataUser("Dosen", "dosen123", 0, "customer")
+# datauser.insert_user()
+
 

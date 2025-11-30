@@ -4,21 +4,9 @@ from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
 
-# import session as sess
-# from tkinter import filedialog
-# import session as sess
 
-
-
-
-
-
-# current_session = sess.Session()
 user = us.DataUser("Dosen", "dosen123", "0", "admin")
 user_repo = us.UserRepository()
-
-
-
 
 
 class MainApp:

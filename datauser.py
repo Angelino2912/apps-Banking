@@ -88,8 +88,5 @@ class UserRepository:
         self.db.cursor.execute(sql, values)
         return self.db.cursor.fetchone()
     
-# Pemanggilan
-# datauser = DataUser("Dosen", "dosen123", 0, "customer")
-# datauser.insert_user()
 
 

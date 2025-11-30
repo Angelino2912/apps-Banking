@@ -62,8 +62,7 @@ class DataUser:
 
         update_result = database.execute_sql(sql,data)
 
-datauser = DataUser("cust", "cust123", 100, "customer")
-# datauser.insert_user()
+
 
 class UserRepository:
 
@@ -82,11 +81,22 @@ class UserRepository:
 
         return users
 
+        
+
     def panggil_user(self, username, password):
         sql = "SELECT * FROM datauser WHERE username_us = %s AND password_us = %s"
         values = (username, password)
         self.db.cursor.execute(sql, values)
         return self.db.cursor.fetchone()
-    
 
+    def tambah_user(self, user: DataUser):
+        query = """
+            INSERT INTO datauser (no_rek, username_us, password_us, balance, role_us)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        values = (user.no_rek, user.username_us, user.password_us, user.balance, user.role_us)
 
+        self.db.cursor.execute(query, values)
+        self.db.mydb.commit()
+
+        print("User berhasil ditambahkan melalui UserRepository! Rek:", user.no_rek)

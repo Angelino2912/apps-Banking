@@ -34,12 +34,15 @@ def generate_rekening():
     return str(random.randint(100000, 999999))
 
 class DataUser:
-    def __init__(self, username_us, password_us, balance, role_us):
+    def __init__(self,username_us, password_us, balance, role_us):
         self.no_rek = generate_rekening()
         self.username_us = username_us
         self.password_us = password_us
         self.balance = balance
         self.role_us = role_us
+
+    def as_tuple(self):
+        return (self.username_us, self.password_us, self.balance, self.role_us)
     
     def insert_user(self):
         query = """
@@ -52,12 +55,6 @@ class DataUser:
         database.db.mydb.commit()
 
         print("User berhasil ditambahkan! Rek:", self.no_rek)
-
-    def panggil_user(self, username_us, password_us):
-        query = "SELECT * FROM datauser WHERE username_us = %s AND password_us = %s"
-        values = (username_us, password_us)
-        database.db.cursor.execute(query, values)
-        return database.db.cursor.fetchone()
     
     def update_datauser (self):
         sql = f"UPDATE datauser SET username_us = %s,password_us = %s,balance = %s,role_us = %s WHERE no_rek IN(%s)"
@@ -65,6 +62,29 @@ class DataUser:
 
         update_result = database.execute_sql(sql,data)
 
+class UserRepository:
+
+    def __init__(self):
+        self.db = database.db   
+
+    def ambil_user(self):
+        sql = "SELECT username_us, password_us, balance, role_us FROM datauser"
+        self.db.cursor.execute(sql)
+        results = self.db.cursor.fetchall()
+
+        users = []
+        for row in results:
+            user = DataUser(row[0], row[1], row[2], row[3])
+            users.append(user)
+
+        return users
+
+    def panggil_user(self, username, password):
+        sql = "SELECT * FROM datauser WHERE username_us = %s AND password_us = %s"
+        values = (username, password)
+        self.db.cursor.execute(sql, values)
+        return self.db.cursor.fetchone()
+    
 # Pemanggilan
 Datauser = DataUser("Dosen", "dosen123", 0, "admin")
 # Datauser.insert_user()

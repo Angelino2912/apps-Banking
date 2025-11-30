@@ -3,15 +3,23 @@ from tkinter import *
 from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
-import session as sess
-from tkinter import filedialog
-import session as sess
+
+# import session as sess
+# from tkinter import filedialog
+# import session as sess
+
+
 
 
 
 
 # current_session = sess.Session()
 user = us.DataUser("Dosen", "dosen123", "0", "admin")
+user_repo = us.UserRepository()
+
+
+
+
 
 class MainApp:
 
@@ -44,7 +52,7 @@ class MainApp:
         password = self.entry_password.get()
         print("Username:", username)
         print("Password:", password)
-        datauser =  user.panggil_user(username,password)
+        datauser = user_repo.panggil_user(username, password)
         print(datauser)
        
         if datauser is not None:
@@ -70,20 +78,28 @@ class MainApp:
         tk.Button(self.root, text="Blokir Nasabah", width=25).pack(pady=5)
         tk.Button(self.root, text="Lihat Transaksi", width=25).pack(pady=5)
         tk.Button(self.root, text="Keluar", width=25, command=root.quit).pack(pady=20)
-    
+
+        
     def lihat_nasabah(self):
         self.clear_window()
-     
-        self.root.title("nasabah page")
+        self.root.title("Nasabah Page")
         self.root.geometry("600x410")
         self.root.configure(bg="#2A1F3D")
 
-        self.label = ttk.Label (root, text=datauser,background="#83f9fd", font=("Comic Sans MS", 13, "bold"))
-        datauser =  user.ambil_customer()
+        datauser = user_repo.ambil_user()
         print(datauser)
-       
-       
-        
+
+        columns = ("username_us", "password_us", "balance", "role_us")
+        tree = ttk.Treeview(self.root, columns=columns, show="headings")
+        tree.pack(fill="both", expand=True, padx=20, pady=20)
+
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=120, anchor="center")
+
+        for row in datauser:
+            tree.insert("", "end", values=row.as_tuple())
+
 
 
 

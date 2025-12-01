@@ -13,13 +13,9 @@ class DataUser:
         self.balance = int(balance)
         self.role_us = role_us
         self.history = []
-      
-
+        
     def add_history(self, msg):
         self.history.append(msg)
-
-  
-
 
     def insert_user(self):
         query = """

@@ -190,6 +190,7 @@ class MainApp:
                     raise ValueError
                 self.current_user.balance -= nominal
                 self.current_user.add_history(f"Withdraw: -Rp {nominal}")
+               
                 user_repo.update_balance(self.current_user)   
 
                 messagebox.showinfo("Sukses", "Penarikan berhasil!")
@@ -211,7 +212,7 @@ class MainApp:
             history_box.insert(tk.END, "Belum ada transaksi.")
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=10)
 
-        
+       
     def clear_window(self):
 	    for widget in self.root.winfo_children():
 	        widget.destroy()

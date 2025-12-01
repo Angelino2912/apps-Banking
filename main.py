@@ -120,7 +120,6 @@ class MainApp:
         tk.Button(self.root, text="Kembali", command=self.admin_login).pack(pady=5)
     
 
-    # ====================== MENU CUSTOMER =====================
     def cust_login(self):
         self.clear_window()
         self.root.title("Customer Menu")
@@ -135,7 +134,6 @@ class MainApp:
         tk.Button(self.root, text="Riwayat Transaksi", width=20, command=self.menu_history).pack(pady=5)
         tk.Button(self.root, text="Logout", width=10, command=self.login_page).pack(pady=20)
  
-    # ======================= CEK SALDO ========================
     def cek_saldo(self):
         saldo = int(self.current_user.balance)
         formatted_saldo = f"Rp {saldo:,.0f}"
@@ -153,7 +151,6 @@ class MainApp:
         
         tk.Button(top, text="Tutup", command=top.destroy).pack(pady=10)
    
-    # ======================= DEPOSIT ==========================
     def menu_deposit(self):
         self.clear_window()
         tk.Label(self.root, text="Setor / Deposit", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
@@ -168,6 +165,9 @@ class MainApp:
                     raise ValueError
                 self.current_user.balance += nominal
                 self.current_user.add_history(f"Deposit: +Rp {nominal}")
+                
+                user_repo.update_balance(self.current_user)
+
                 messagebox.showinfo("Sukses", "Deposit berhasil!")
                 self.cust_login()
             except:
@@ -176,7 +176,6 @@ class MainApp:
         tk.Button(self.root, text="Setor", command=proses).pack(pady=10)
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=5)
 
-    # ================= WITHDRAW ===================
     def menu_withdraw(self):
         self.clear_window()
         tk.Label(self.root, text="Tarik Tunai", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
@@ -191,6 +190,8 @@ class MainApp:
                     raise ValueError
                 self.current_user.balance -= nominal
                 self.current_user.add_history(f"Withdraw: -Rp {nominal}")
+                user_repo.update_balance(self.current_user)   
+
                 messagebox.showinfo("Sukses", "Penarikan berhasil!")
                 self.cust_login()
             except:
@@ -198,7 +199,6 @@ class MainApp:
         tk.Button(self.root, text="Tarik", command=proses).pack(pady=10)
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=5)
 
-    # ================= HISTORY ===================
     def menu_history(self):
         self.clear_window()
         tk.Label(self.root, text="Riwayat Transaksi", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=10)
@@ -211,6 +211,7 @@ class MainApp:
             history_box.insert(tk.END, "Belum ada transaksi.")
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=10)
 
+        
     def clear_window(self):
 	    for widget in self.root.winfo_children():
 	        widget.destroy()

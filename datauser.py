@@ -13,9 +13,13 @@ class DataUser:
         self.balance = int(balance)
         self.role_us = role_us
         self.history = []
+      
 
     def add_history(self, msg):
         self.history.append(msg)
+
+  
+
 
     def insert_user(self):
         query = """
@@ -56,4 +60,13 @@ class UserRepository:
         self.db.cursor.execute(query, values)
         self.db.mydb.commit()
         print("User berhasil ditambahkan melalui UserRepository! Rek:", user.no_rek)
+      
 
+    def update_balance(self, user: DataUser):
+        sql = "UPDATE datauser SET balance = %s WHERE username_us = %s"
+        values = (user.balance, user.username_us)
+        self.db.cursor.execute(sql, values)
+        self.db.mydb.commit()
+        print(f"Saldo user {user.username_us} berhasil diperbarui di database.")
+
+   

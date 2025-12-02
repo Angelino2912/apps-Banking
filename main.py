@@ -174,9 +174,7 @@ class MainApp:
                 self.current_user.add_history(f"Deposit: +Rp {nominal}")
                 
                 user_repo.save_history(
-                self.current_user.username_us,
-                "Deposit",
-                +nominal
+                self.current_user.username_us,"Deposit",+nominal
                 )
                 
                 user_repo.update_balance(self.current_user)

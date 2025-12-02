@@ -19,10 +19,15 @@ class MainApp:
         self.root.title("Login page")
         self.root.geometry("600x410")
 
+
         self.root.configure(bg="#2A1F3D")
         self.login_page()
 
         self.root.configure(bg="#FFFFFF")
+
+
+        self.root.configure(bg="#2A1F3D")
+        self.login_page()
 
 
     def login_page(self):
@@ -39,7 +44,9 @@ class MainApp:
         self.entry_username.pack(pady=(0,10))
 
         self.label = ttk.Label(root, text="Passsword",background="#83f9fd", font=("Comic Sans MS", 13, "bold") )
+
         self.label = ttk.Label(root, text="Passsword",background="#ffffff", font=("Comic Sans MS", 13, "bold") )
+
 
         self.label.pack()
         self.entry_password = ttk.Entry(self.root,show="*", width=30)
@@ -257,18 +264,6 @@ class MainApp:
 	#             widget.destroy()
 
 
-        
-       
-
-         
-
-
-
-    
-    
-    # def clear_window(self):
-	#     for widget in self.root.winfo_children():
-	#         widget.destroy()
 
 root = Tk()
 app = MainApp(root)

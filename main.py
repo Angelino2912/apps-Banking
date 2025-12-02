@@ -183,10 +183,10 @@ class MainApp:
         top.geometry("500x500")
         top.configure(bg="#2A1F3D")
         
-        tk.Label(top, text=f"👋 Halo Cust {self.current_user.username_us}!", 
+        tk.Label(top, text=f" Halo Cust {self.current_user.username_us}!", 
                 font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=10)
         
-        tk.Label(top, text=f"💰 Saldo Anda Saat ini: {formatted_saldo}", 
+        tk.Label(top, text=f" Saldo Anda Saat ini: {formatted_saldo}", 
                 font=("Arial", 16, "bold"), bg="#2A1F3D", fg="white").pack(pady=10)
         
         tk.Button(top, text="Tutup", command=top.destroy).pack(pady=10)

@@ -21,8 +21,10 @@ class MainApp:
         self.login_page()
 
     def login_page(self):
-        self.clear_window()
 
+        self.clear_window()
+        # menghilangkan tampilan sebelumnya sebelum keluar pagenya
+ 
         self.title = tk.Label(self.root, text="Hallo Kamu!!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
         self.title.pack(pady=(20, 20))
 
@@ -64,9 +66,7 @@ class MainApp:
         self.root.geometry("600x410")
         self.root.configure(bg="#2A1F3D")
    
-        
         tk.Label(self.root, text="MENU ADMIN BANK", font=("Arial", 16), bg="#2A1F3D", fg="white").pack(pady=20)
-
         tk.Button(self.root, text="Lihat Nasabah", width=25, command=self.lihat_nasabah).pack(pady=5)
         tk.Button(self.root, text="Tambah Nasabah", width=25, command=self.tambah_nasabah).pack(pady=5)
         tk.Button(self.root, text="Lihat Transaksi", width=25).pack(pady=5)
@@ -88,18 +88,20 @@ class MainApp:
         
 
     def tambah_nasabah(self):
-        for widget in self.root.winfo_children():
-            widget.destroy()
+        self.clear_window()
         tk.Label(self.root, text="Tambah Nasabah Baru", font=("Arial", 16), bg="#2A1F3D", fg="white").pack(pady=20)
 
         frame = tk.Frame(self.root, bg="#2A1F3D")
         frame.pack()
+        
         tk.Label(frame, text="Username:", bg="#2A1F3D", fg="white").grid(row=0, column=0, pady=5)
         entry_user = tk.Entry(frame, width=30)
         entry_user.grid(row=0, column=1)
+       
         tk.Label(frame, text="Password:", bg="#2A1F3D", fg="white").grid(row=1, column=0, pady=5)
         entry_pass = tk.Entry(frame, width=30, show="*")
         entry_pass.grid(row=1, column=1)
+       
         tk.Label(frame, text="Saldo Awal:", bg="#2A1F3D", fg="white").grid(row=2, column=0, pady=5)
         entry_saldo = tk.Entry(frame, width=30)
         entry_saldo.grid(row=2, column=1)
@@ -108,9 +110,11 @@ class MainApp:
             username = entry_user.get()
             password = entry_pass.get()
             saldo = entry_saldo.get()
+            
             if not username or not password or not saldo:
                 messagebox.showerror("Error", "Semua field wajib diisi!")
                 return
+            
             new_user = us.DataUser(username, password, int(saldo), "customer")
             user_repo.tambah_user(new_user)
             messagebox.showinfo("Sukses", "Nasabah berhasil ditambahkan!")
@@ -153,8 +157,10 @@ class MainApp:
    
     def menu_deposit(self):
         self.clear_window()
+        
         tk.Label(self.root, text="Setor / Deposit", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
         tk.Label(self.root, text="Masukkan nominal:", bg="#2A1F3D", fg="white").pack()
+        
         amount = tk.Entry(self.root)
         amount.pack(pady=5)
 
@@ -163,8 +169,15 @@ class MainApp:
                 nominal = int(amount.get())
                 if nominal <= 0:
                     raise ValueError
+                
                 self.current_user.balance += nominal
                 self.current_user.add_history(f"Deposit: +Rp {nominal}")
+                
+                user_repo.save_history(
+                self.current_user.username_us,
+                "Deposit",
+                +nominal
+                )
                 
                 user_repo.update_balance(self.current_user)
 
@@ -178,8 +191,10 @@ class MainApp:
 
     def menu_withdraw(self):
         self.clear_window()
+        
         tk.Label(self.root, text="Tarik Tunai", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
         tk.Label(self.root, text="Masukkan nominal:", bg="#2A1F3D", fg="white").pack()
+        
         amount = tk.Entry(self.root)
         amount.pack(pady=5)
 
@@ -190,6 +205,10 @@ class MainApp:
                     raise ValueError
                 self.current_user.balance -= nominal
                 self.current_user.add_history(f"Withdraw: -Rp {nominal}")
+                
+                user_repo.save_history(
+                self.current_user.username_us,"Withdraw",-nominal
+                )
                
                 user_repo.update_balance(self.current_user)   
 
@@ -197,20 +216,29 @@ class MainApp:
                 self.cust_login()
             except:
                 messagebox.showerror("Error", "Nominal tidak valid atau saldo kurang!")
+        
         tk.Button(self.root, text="Tarik", command=proses).pack(pady=10)
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=5)
 
     def menu_history(self):
         self.clear_window()
+        
         tk.Label(self.root, text="Riwayat Transaksi", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=10)
-        history_box = tk.Listbox(self.root, width=50, height=10)
+        
+        history_box = tk.Listbox(self.root, width=60, height=12)
         history_box.pack(pady=10)
-        if self.current_user.history:
-            for h in self.current_user.history:
-                history_box.insert(tk.END, h)
+
+        
+        history_data = user_repo.get_history(self.current_user.username_us)
+        
+        if history_data:
+            for desc, amount, time in history_data:
+                history_box.insert(tk.END, f"{time} | {desc} | Rp {amount}")
         else:
             history_box.insert(tk.END, "Belum ada transaksi.")
+        
         tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=10)
+
 
        
     def clear_window(self):

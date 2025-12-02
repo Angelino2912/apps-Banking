@@ -1,6 +1,7 @@
 
 import database
 import random
+from datetime import datetime
 
 def generate_rekening():
     return str(random.randint(100000, 999999))
@@ -64,5 +65,20 @@ class UserRepository:
         self.db.cursor.execute(sql, values)
         self.db.mydb.commit()
         print(f"Saldo user {user.username_us} berhasil diperbarui di database.")
+
+
+    def save_history(self, username_us, description, amount):
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sql = "INSERT INTO history (username_us, description, amount, timestamp) VALUES (%s, %s, %s, %s)"
+        values = (username_us, description, amount, timestamp)
+        self.db.cursor.execute(sql, values)
+        self.db.mydb.commit()
+
+
+    def get_history(self, username_us):
+        sql = "SELECT description, amount, timestamp FROM history WHERE username_us=%s ORDER BY timestamp DESC"
+        self.db.cursor.execute(sql, (username_us,))
+        return self.db.cursor.fetchall()
 
    

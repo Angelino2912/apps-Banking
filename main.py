@@ -3,13 +3,14 @@ from tkinter import *
 from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
+from datauser import UserRepo
 # from user_repo import UserRepositoryy
 # from rekening import Rekening
 
 
 
 user = us.DataUser("Dosen", "dosen123", "0", "admin")
-user_repo = us.UserRepository()
+user_repo = us.UserRepo()
 
 
 class MainApp:
@@ -90,17 +91,38 @@ class MainApp:
     def lihat_nasabah(self):
         self.clear_window()
         data_customer = user_repo.ambil_user()
+
         columns = ("No Rek", "Username", "Password", "Saldo", "Role")
-        tree = ttk.Treeview(self.root, columns=columns, show="headings")
-        tree.pack(fill="both", expand=True, padx=20, pady=20)
+
+        self.tree = ttk.Treeview(self.root, columns=columns, show="headings")
+        self.tree.pack(fill="both", expand=True, padx=20, pady=20)
+
         for col in columns:
-            tree.heading(col, text=col)
-            tree.column(col, width=120, anchor="center")
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=120, anchor="center")
+
         for row in data_customer:
-            tree.insert("", "end", values=(row.no_rek, row.username_us, row.password_us, row.balance, row.role_us))
-        
+            self.tree.insert("", "end", values=(
+                row.no_rek,
+                row.username_us,
+                row.password_us,
+                row.balance,
+                row.role_us
+            ))
+
+            self.load_data
+
         tk.Button(self.root, text="Kembali", command=self.admin_login).pack(pady=10)
-        
+
+    def load_data(self):
+        repo = UserRepo()
+        data = repo.ambil_semua_user()  
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for row in data:
+            self.tree.insert("", "end", values=row)
 
     def tambah_nasabah(self):
         self.clear_window()

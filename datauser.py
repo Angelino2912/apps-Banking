@@ -28,7 +28,7 @@ class DataUser:
         database.db.mydb.commit()
         print("User berhasil ditambahkan! Rek:", self.no_rek)
 
-class UserRepository:
+class UserRepo:
     def __init__(self):
         self.db = database.db
 
@@ -47,6 +47,11 @@ class UserRepository:
         if row:
             return DataUser(row[0], row[1], row[2], row[3])
         return None
+    
+    def ambil_semua_user(self):
+        sql = "SELECT no_rek, username_us, balance, role_us FROM datauser"
+        self.db.cursor.execute(sql)
+        return self.db.cursor.fetchall()
 
     def tambah_user(self, user: DataUser):
         query = """

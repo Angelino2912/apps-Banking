@@ -4,9 +4,8 @@ from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
 from datauser import UserRepo
-# from user_repo import UserRepositoryy
-# from rekening import Rekening
 
+# pemilaian presentasi, penilaian laporan, nilai aplikasi, nilai konntribusi, nilai tanya jawab.
 
 
 user = us.DataUser("Dosen", "dosen123", "0", "admin")

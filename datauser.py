@@ -73,10 +73,9 @@ class UserRepo:
 
 
     def save_history(self, username_us, description, amount):
-        from datetime import datetime
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        times = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         sql = "INSERT INTO history (username_us, description, amount, timestamp) VALUES (%s, %s, %s, %s)"
-        values = (username_us, description, amount, timestamp)
+        values = (username_us, description, amount, times)
         self.db.cursor.execute(sql, values)
         self.db.mydb.commit()
 

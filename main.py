@@ -7,6 +7,7 @@ from tkinter import messagebox
 # from rekening import Rekening
 
 
+
 user = us.DataUser("Dosen", "dosen123", "0", "admin")
 user_repo = us.UserRepository()
 
@@ -17,8 +18,12 @@ class MainApp:
         self.root = root
         self.root.title("Login page")
         self.root.geometry("600x410")
+
         self.root.configure(bg="#2A1F3D")
         self.login_page()
+
+        self.root.configure(bg="#FFFFFF")
+
 
     def login_page(self):
 
@@ -28,12 +33,14 @@ class MainApp:
         self.title = tk.Label(self.root, text="Hallo Kamu!!", font=("Segoe UI", 15, "bold"), bg="#ffffff")
         self.title.pack(pady=(20, 20))
 
-        self.label = ttk.Label(root, text="Username",background="#83f9fd", font=("Comic Sans MS", 13, "bold"))
+        self.label = ttk.Label(root, text="Username",background="#ffffff", font=("Comic Sans MS", 13, "bold"))
         self.label.pack()
         self.entry_username = ttk.Entry(self.root, width=30)
         self.entry_username.pack(pady=(0,10))
 
         self.label = ttk.Label(root, text="Passsword",background="#83f9fd", font=("Comic Sans MS", 13, "bold") )
+        self.label = ttk.Label(root, text="Passsword",background="#ffffff", font=("Comic Sans MS", 13, "bold") )
+
         self.label.pack()
         self.entry_password = ttk.Entry(self.root,show="*", width=30)
         self.entry_password.pack(pady=(0,20))
@@ -65,6 +72,7 @@ class MainApp:
         self.root.title("admin login")
         self.root.geometry("600x410")
         self.root.configure(bg="#2A1F3D")
+
    
         tk.Label(self.root, text="MENU ADMIN BANK", font=("Arial", 16), bg="#2A1F3D", fg="white").pack(pady=20)
         tk.Button(self.root, text="Lihat Nasabah", width=25, command=self.lihat_nasabah).pack(pady=5)
@@ -247,6 +255,20 @@ class MainApp:
 	#     if hasattr(self, "content_frame") and self.content_frame.winfo_exists():
 	#         for widget in self.content_frame.winfo_children():
 	#             widget.destroy()
+
+
+        
+       
+
+         
+
+
+
+    
+    
+    # def clear_window(self):
+	#     for widget in self.root.winfo_children():
+	#         widget.destroy()
 
 root = Tk()
 app = MainApp(root)

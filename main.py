@@ -306,49 +306,95 @@ class MainApp:
 
     def cust_login(self):
         self.clear_window()
-        self.root.title("Customer Menu")
 
-        tk.Label(self.root,
-                 text=f"Selamat datang, {self.current_user.username_us}",
-                 font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=15)
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
 
-        tk.Button(self.root, text="Cek Saldo", width=20, command=self.cek_saldo).pack(pady=5)
-        tk.Button(self.root, text="Setor / Deposit", width=20, command=self.menu_deposit).pack(pady=5)
-        tk.Button(self.root, text="Tarik Tunai", width=20, command=self.menu_withdraw).pack(pady=5)
-        tk.Button(self.root, text="Riwayat Transaksi", width=20, command=self.menu_history).pack(pady=5)
-        tk.Button(self.root, text="Logout", width=10, command=self.login_page).pack(pady=20)
- 
+        # header hijau
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")#meletakan bagian hijau di atas
+        self.top_frame.pack_propagate(False)#mengatur ukuran frame
+        username_label = getattr(self, "current_user", None)#mendapatkan atribut current_user dari self (MainApp) object name default
+        title_text = f"Selamat datang, {username_label.username_us}" if username_label else "Selamat datang"
+        ttk.Label(self.top_frame, text=title_text, background=top_color,foreground="white", font=("Segoe UI", 16, "bold")).pack(pady=16)
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)#mengisi frame secara penuh
+
+        # kartu sederhana di tengah
+        self.card = ttk.Frame(self.main_frame, padding=20)
+        self.card.place(relx=0.5, rely=0.32, anchor="center")#relx=horizontal, rely=vertical
+
+        ttk.Label(self.card, text=f"Halo, {self.current_user.username_us}", font=("Segoe UI", 14, "bold")).pack(pady=(0,12))
+
+        # tombol aksi (warna konsisten)
+        tk.Button(self.card, text="Cek Saldo", width=28, command=self.cek_saldo,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Setor / Deposit", width=28, command=self.menu_deposit,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Tarik Tunai", width=28, command=self.menu_withdraw,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Riwayat Transaksi", width=28, command=self.menu_history,bg=top_color, fg="white", bd=0).pack(pady=6)
+        #command = tombol  buutton di klik akan menjalankan fungsi 
+        # logout
+        tk.Button(self.card, text="Logout", width=20, command=self.login_page,bg="#E53E3E", fg="white", bd=0).pack(pady=(12,0))
+
     def cek_saldo(self):
         saldo = int(self.current_user.balance)
         formatted_saldo = f"Rp {saldo:,.0f}"
-        
-        top = tk.Toplevel(self.root)
-        top.title("Saldo Anda")
-        top.geometry("500x500")
-        top.configure(bg="#2A1F3D")
-        
-        tk.Label(top, text=f" Halo Cust {self.current_user.username_us}!", 
-                font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=10)
-        
-        tk.Label(top, text=f" Saldo Anda Saat ini: {formatted_saldo}", 
-                font=("Arial", 16, "bold"), bg="#2A1F3D", fg="white").pack(pady=10)
-        
-        tk.Button(top, text="Tutup", command=top.destroy).pack(pady=10)
-   
+
+        top_color = "#0BA68B"
+        bg = "#F5FAFC"
+
+        atas = tk.Toplevel(self.root)
+        atas.title("Saldo Anda")
+        atas.geometry("360x200")
+        atas.configure(bg=bg)
+
+        #latar hijau di atas
+        latar_atas= tk.Frame(atas, bg=top_color, height=56)
+        latar_atas.pack(fill="x")
+        latar_atas.pack_propagate(False)
+        tk.Label(latar_atas, text="Saldo Anda", bg=top_color, fg="white", font=("Segoe UI", 12, "bold")).pack(pady=12)
+
+        # isi kartu tengah
+        Frame = ttk.Frame(atas, padding=12)
+        Frame.pack(fill="both", expand=True)
+
+        tk.Label(Frame, text=f"Halo, {self.current_user.username_us}", bg=bg, fg="#333", font=("Segoe UI", 10)).pack(pady=(4,6))
+        tk.Label(Frame, text=formatted_saldo, bg=bg, fg=top_color, font=("Segoe UI", 16, "bold")).pack(pady=(0,8))
+
+        tk.Button(Frame, text="Tutup", command=atas.destroy, bg=top_color, fg="white", bd=0, width=12).pack(pady=6)
+        #destroy = menutup jendela
+
     def menu_deposit(self):
         self.clear_window()
-        
-        tk.Label(self.root, text="Setor / Deposit", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
-        tk.Label(self.root, text="Masukkan nominal:", bg="#2A1F3D", fg="white").pack()
-        
-        amount = tk.Entry(self.root)
-        amount.pack(pady=5)
+
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
+
+        # header hijau
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")#meletakan bagian hijau di atas
+        self.top_frame.pack_propagate(False)#mengatur ukuran frame
+        ttk.Label(self.top_frame, text="Setor / Deposit", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        #foreground=warna tulisan
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)#mengisi frame secara penuh both+tinggi dan lebar
+
+        # kartu sederhana di tengah
+        self.card = ttk.Frame(self.main_frame, padding=20)
+        self.card.place(relx=0.5, rely=0.35, anchor="center")#relx=horizontal, rely=vertical
+
+        ttk.Label(self.card, text="Masukkan Nominal Setor").pack(anchor="w")
+        amount = ttk.Entry(self.card, width=44)
+        amount.pack(pady=6)
 
         def proses():
-            try:
+            try:    #kode yang mungkin error
                 nominal = int(amount.get())
                 if nominal <= 0:
-                    raise ValueError
+                    raise ValueError #pesan error nominal tidak valid
                 
                 self.current_user.balance += nominal
                 self.current_user.add_history(f"Deposit: +Rp {nominal}")
@@ -361,65 +407,93 @@ class MainApp:
 
                 messagebox.showinfo("Sukses", "Deposit berhasil!")
                 self.cust_login()
-            except:
+            except: # apa yang dilakukan kalau ada error
                 messagebox.showerror("Error", "Nominal tidak valid!")
 
-        tk.Button(self.root, text="Setor", command=proses).pack(pady=10)
-        tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=5)
+        tk.Button(self.card, text="Setor", command=proses,bg=top_color, fg="white", bd=0, width=20).pack(pady=(10,6))
+        tk.Button(self.card, text="Kembali", command=self.cust_login,bg="#E53E3E", fg="white", bd=0, width=20).pack()
 
     def menu_withdraw(self):
         self.clear_window()
-        
-        tk.Label(self.root, text="Tarik Tunai", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=20)
-        tk.Label(self.root, text="Masukkan nominal:", bg="#2A1F3D", fg="white").pack()
-        
-        amount = tk.Entry(self.root)
-        amount.pack(pady=5)
+
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
+
+        # header hijau sederhana
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")#meletakan bagian hijau di atas
+        self.top_frame.pack_propagate(False)#   mengatur ukuran frame
+        ttk.Label(self.top_frame, text="Tarik Tunai", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        #foreground=warna tulisan
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)#mengisi frame secara penuh both=tinggi dan lebar
+
+        # kartu sederhana di tengah
+        self.card = ttk.Frame(self.main_frame, padding=20)
+        self.card.place(relx=0.5, rely=0.35, anchor="center")#relx=horizontal, rely=vertical
+
+        ttk.Label(self.card, text="Masukkan Nominal Tarik").pack(anchor="w")
+        amount = ttk.Entry(self.card, width=44)
+        amount.pack(pady=6)
 
         def proses():
             try:
                 nominal = int(amount.get())
                 if nominal <= 0 or nominal > self.current_user.balance:
-                    raise ValueError
+                    raise ValueError    #pesan error nominal tidak valid atau saldo kurang
                 self.current_user.balance -= nominal
                 self.current_user.add_history(f"Withdraw: -Rp {nominal}")
-                
-                user_repo.save_history(
-                self.current_user.username_us,"Withdraw",-nominal
-                )
-               
-                user_repo.update_balance(self.current_user)   
+
+                user_repo.save_history(self.current_user.username_us, "Withdraw", -nominal)
+                user_repo.update_balance(self.current_user)
 
                 messagebox.showinfo("Sukses", "Penarikan berhasil!")
                 self.cust_login()
             except:
                 messagebox.showerror("Error", "Nominal tidak valid atau saldo kurang!")
-        
-        tk.Button(self.root, text="Tarik", command=proses).pack(pady=10)
-        tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=5)
+
+        tk.Button(self.card, text="Tarik", command=proses,bg=top_color, fg="white", bd=0, width=20).pack(pady=(10,6))
+        tk.Button(self.card, text="Kembali", command=self.cust_login,bg="#E53E3E", fg="white", bd=0, width=20).pack()
 
     def menu_history(self):
         self.clear_window()
-        
-        tk.Label(self.root, text="Riwayat Transaksi", font=("Arial", 14), bg="#2A1F3D", fg="white").pack(pady=10)
-        
-        history_box = tk.Listbox(self.root, width=60, height=12)
-        history_box.pack(pady=10)
 
-        
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
+
+        # header hijau sederhana
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")#meletakan bagian hijau di atas
+        self.top_frame.pack_propagate(False)#mengatur ukuran frame
+        ttk.Label(self.top_frame, text="Riwayat Transaksi", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        #foreground=warna tulisan
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)#mengisi frame secara penuh both=tinggi dan lebar
+
+        # kartu / panel tengah untuk konten
+        self.card = ttk.Frame(self.main_frame, padding=16)
+        self.card.place(relx=0.5, rely=0.35, anchor="center")#relx=horizontal, rely=vertical
+
+        # Listbox sederhana untuk history
+        history_box = tk.Listbox(self.card, width=60, height=12)
+        history_box.pack(fill="both", expand=True)#mengisi frame secara penuh both=tinggi dan lebar
+
+        # ambil dan tampilkan history (logika tetap sama)
         history_data = user_repo.get_history(self.current_user.username_us)
-        
         if history_data:
-           
-    
             for desc, amount, timestamp in history_data:
                 tampil = datetime.strptime(str(timestamp), "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M:%S")
                 history_box.insert(tk.END, f"{tampil} | {desc} | Rp {amount}")
         else:
             history_box.insert(tk.END, "Belum ada transaksi.")
-        
-        tk.Button(self.root, text="Kembali", command=self.cust_login).pack(pady=10)
 
+        # tombol kembali (tetap di bawah)
+        tk.Button(self.main_frame, text="Kembali", command=self.cust_login,bg=top_color, fg="white", bd=0, width=20).pack(pady=12)
+        #command = tombol  buutton di klik akan menjalankan fungsi
 
        
     def clear_window(self):

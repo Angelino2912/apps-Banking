@@ -82,8 +82,7 @@ class MainApp:
         self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
         self.top_frame.pack(side="top", fill="x")
         self.top_frame.pack_propagate(False)
-        ttk.Label(self.top_frame, text="Bank Kita Bersama — Admin", background=top_color,
-                  foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        ttk.Label(self.top_frame, text="Bank Kita Bersama — Admin", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
 
         # area utama
         self.main_frame = tk.Frame(self.root, bg=bg_main)
@@ -110,88 +109,50 @@ class MainApp:
         top_color = "#0BA68B"
         bg_main = "#F5FAFC"
 
-        # self.root.title("Daftar Nasabah")
-        # self.root.configure(bg=bg_main)
-
         # header hijau
         self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
         self.top_frame.pack(side="top", fill="x")
-        self.top_frame.pack_propagate(False) #untuk mengatur secara otomatis ukuran frame
+        self.top_frame.pack_propagate(False)
         ttk.Label(self.top_frame, text="Daftar Nasabah", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        #foreground=warna tulisan
 
         # area utama
         self.main_frame = tk.Frame(self.root, bg=bg_main)
-        self.main_frame.pack(fill="both", expand=True) # untuk mengisi frame secara penuh jika "true",mengambil tinggi dan lebar
+        self.main_frame.pack(fill="both", expand=True)
 
         # kartu berisi tabel
-        self.card = ttk.Frame(self.main_frame, padding=(12,12))
-        self.card.place(relx=0.5, rely=0.45, anchor="center") #relx=horizontal, rely=vertical 
+        self.card = ttk.Frame(self.main_frame, padding=12)
+        self.card.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # style treeview nampilkan data
+        # style treeview
         style = ttk.Style()
         style.configure("Treeview", rowheight=28, font=("Segoe UI", 10))
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
 
-        # kolom (id internal -> label)
-        cols = [("no_rek", "No Rek", 140, "center"),
-                ("username_us", "Username", 220, "w"),
-                ("password_us", "Password", 180, "center"),
-                ("balance", "Saldo", 160, "center"),
-                ("role_us", "Role", 120, "center")]
+        # treeview sederhana
+        cols = ["No Rek", "Username", "Password", "Saldo", "Role"]
+        self.tree = ttk.Treeview(self.card, columns=cols, show="headings", height=12)
+        self.tree.pack(fill="both", expand=True)
 
-        table_frame = ttk.Frame(self.card)
-        table_frame.pack(fill="both", expand=True)
-
-        vsb = ttk.Scrollbar(table_frame, orient="vertical") #vertical scrollbar
-        hsb = ttk.Scrollbar(table_frame, orient="horizontal")#horizontal scroll bar
-        self.tree = ttk.Treeview(table_frame,
-                                 columns=[c[0] for c in cols],
-                                 show="headings",
-                                 yscrollcommand=vsb.set, # menghubungkan dengan scrollbar
-                                 xscrollcommand=hsb.set,
-                                 height=12)
-        vsb.config(command=self.tree.yview)
-        hsb.config(command=self.tree.xview)
-
-        #grid= lebih simple dari pack()
-        self.tree.grid(row=0, column=0, sticky="nsew") #memenuhi seluruh area
-        vsb.grid(row=0, column=1, sticky="ns")# vertikal
-        hsb.grid(row=1, column=0, sticky="ew")# horizontal
-        table_frame.grid_rowconfigure(0, weight=1)
-        table_frame.grid_columnconfigure(0, weight=1)
-
-        # setup heading & column properties
-        for col_id, label, width, anchor in cols:
-            self.tree.heading(col_id, text=label)
-            self.tree.column(col_id, width=width, anchor=anchor, stretch=True)
+        # setup heading & column
+        for col in cols:
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=140, anchor="center")
 
         # alternating row colors
         self.tree.tag_configure("odd", background="#FFFFFF")
         self.tree.tag_configure("even", background="#F3FFF9")
 
-        # isi data dan format saldo
+        # isi data
         data_customer = user_repo.ambil_user()
-        for i, row in enumerate(data_customer):
-            if data_customer:
-                saldo_val = int(row.balance)
-                saldo_text = f"Rp {saldo_val:,.0f}" # angka tertentu
-            else:
-                saldo_text = str(row.balance)
+        for i, row in enumerate(data_customer): #mengambil data dari databse sesuai list
+            saldo_text = f"Rp {int(row.balance):,.0f}" #format saldo dengan koma pada nominal
+            values = (row.no_rek, row.username_us, row.password_us, saldo_text, row.role_us) #menyusun data yang di tampilkan
+            tag = "even" if i % 2 == 0 else "odd" #menentukan ganjil genap untuk pewarnaan nya biar cantik aja
+            self.tree.insert("", "end", values=values, tags=(tag,))
 
-            values = (
-                row.no_rek,
-                row.username_us,
-                row.password_us,
-                saldo_text,
-                row.role_us
-            )
-            tag = "even" if i % 2 == 0 else "odd" #jika genap dan ganjil
-            self.tree.insert("", "end", values=values, tags=(tag,)) #menambahkan, tidak ada root lansung, baris akhir
-
-        # tombol kembali di bawah
-        button_frame = ttk.Frame(self.main_frame)
-        button_frame.place(relx=0.5, rely=0.88, anchor="center") #relx=horizontal rely=vertical
-        tk.Button(button_frame, text="Kembali", width=20, command=self.admin_login,bg=top_color, fg="white", bd=0).pack() #foreground
+        # tombol kembali
+        tk.Button(self.root, text="Kembali", command=self.admin_login,bg=top_color, fg="white", bd=0, width=20).pack(pady=10)
 
     def load_data(self):
         repo = UserRepo()
@@ -205,22 +166,38 @@ class MainApp:
 
     def tambah_nasabah(self):
         self.clear_window()
-        tk.Label(self.root, text="Tambah Nasabah Baru", font=("Arial", 16), bg="#2A1F3D", fg="white").pack(pady=20)
 
-        frame = tk.Frame(self.root, bg="#2A1F3D")
-        frame.pack()
-        
-        tk.Label(frame, text="Username:", bg="#2A1F3D", fg="white").grid(row=0, column=0, pady=5)
-        entry_user = tk.Entry(frame, width=30)
-        entry_user.grid(row=0, column=1)
-       
-        tk.Label(frame, text="Password:", bg="#2A1F3D", fg="white").grid(row=1, column=0, pady=5)
-        entry_pass = tk.Entry(frame, width=30, show="*")
-        entry_pass.grid(row=1, column=1)
-       
-        tk.Label(frame, text="Saldo Awal:", bg="#2A1F3D", fg="white").grid(row=2, column=0, pady=5)
-        entry_saldo = tk.Entry(frame, width=30)
-        entry_saldo.grid(row=2, column=1)
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
+
+        # header hijau
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")
+        self.top_frame.pack_propagate(False)#mengatur ukuran frame
+        ttk.Label(self.top_frame, text="Tambah Nasabah", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+        #foreground=warna tulisan
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)
+
+        # kartu sederhana di tengah
+        self.card = ttk.Frame(self.main_frame, padding=20)
+        self.card.place(relx=0.5, rely=0.35, anchor="center")
+
+        ttk.Label(self.card, text="Form Tambah Nasabah", font=("Segoe UI", 14, "bold")).pack(pady=(0,12))
+
+        ttk.Label(self.card, text="Username").pack(anchor="w")
+        entry_user = ttk.Entry(self.card, width=44)
+        entry_user.pack(pady=6)
+
+        ttk.Label(self.card, text="Password").pack(anchor="w")
+        entry_pass = ttk.Entry(self.card, width=44, show="*")
+        entry_pass.pack(pady=6)
+
+        ttk.Label(self.card, text="Saldo Awal").pack(anchor="w")
+        entry_saldo = ttk.Entry(self.card, width=44)
+        entry_saldo.pack(pady=6)
 
         def proses_tambah():
             username = entry_user.get()
@@ -236,40 +213,50 @@ class MainApp:
             messagebox.showinfo("Sukses", "Nasabah berhasil ditambahkan!")
             self.admin_login()
 
-        tk.Button(self.root, text="Simpan", command=proses_tambah).pack(pady=10)
-        tk.Button(self.root, text="Kembali", command=self.admin_login).pack(pady=5)
-
+        tk.Button(self.card, text="Simpan", command=proses_tambah,bg=top_color, fg="white", bd=0, width=20).pack(pady=(10,6))
+        tk.Button(self.card, text="Kembali", command=self.admin_login,bg="#E53E3E", fg="white", bd=0, width=20).pack()
 
     def ganti_password(self):
         self.clear_window()
-        self.root.title("Ganti Password Nasabah")
-        self.root.configure(bg="#2A1F3D")
 
-        tk.Label(self.root, text="Change Password Here BROOO !!!",font=("Arial", 16, "bold"), bg="#2A1F3D", fg="white").pack(pady=15)
-        tk.Label(self.root, text="Username Customer", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
 
-        self.entry_username = tk.Entry(self.root, width=30)
-        self.entry_username.pack(pady=5)
+        # header hijau
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")
+        self.top_frame.pack_propagate(False)#mengatur ukuran frame
+        ttk.Label(self.top_frame, text="Ganti Password Nasabah", background=top_color,foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
 
-        tk.Label(self.root, text="Password Lama", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main) 
+        self.main_frame.pack(fill="both", expand=True) #mengisi frame secara penuh
 
-        self.entry_pass_lama = tk.Entry(self.root, width=30, show="*")
-        self.entry_pass_lama.pack(pady=5)
+        # kartu sederhana di tengah
+        self.card = ttk.Frame(self.main_frame, padding=20)
+        self.card.place(relx=0.5, rely=0.35, anchor="center") #relx=horizontal, rely=vertical
 
-        tk.Label(self.root, text="Password Baru", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+        ttk.Label(self.card, text="Pergantian Password", font=("Segoe UI", 14, "bold")).pack(pady=(0,12))
 
-        self.entry_pass_baru = tk.Entry(self.root, width=30, show="*")
-        self.entry_pass_baru.pack(pady=5)
+        ttk.Label(self.card, text="Username Customer").pack(anchor="w")
+        self.entry_username = ttk.Entry(self.card, width=44)
+        self.entry_username.pack(pady=6)
 
-        tk.Label(self.root, text="Confirm Password baru", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+        ttk.Label(self.card, text="Password Lama").pack(anchor="w")
+        self.entry_pass_lama = ttk.Entry(self.card, width=44, show="*")
+        self.entry_pass_lama.pack(pady=6)
 
-        self.entry_confirm_pass = tk.Entry(self.root, width=30, show="*")
-        self.entry_confirm_pass.pack(pady=5)
+        ttk.Label(self.card, text="Password Baru").pack(anchor="w")
+        self.entry_pass_baru = ttk.Entry(self.card, width=44, show="*")
+        self.entry_pass_baru.pack(pady=6)
 
-        tk.Button(self.root, text="Ganti Password", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white",width=20,
-                command=self.proses_ganti).pack(pady=20)
-        
-        tk.Button(self.root, text="kembali", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white",width=20,command=self.admin_login).pack(pady=20)
+        ttk.Label(self.card, text="Konfirmasi Password Baru").pack(anchor="w")
+        self.entry_confirm_pass = ttk.Entry(self.card, width=44, show="*")
+        self.entry_confirm_pass.pack(pady=6)
+
+        tk.Button(self.card, text="Ganti Password", command=self.proses_ganti,bg=top_color, fg="white", bd=0, width=20).pack(pady=(10,6))
+        tk.Button(self.card, text="Kembali", command=self.admin_login,bg="#E53E3E", fg="white", bd=0, width=20).pack()
+
     def proses_ganti(self):
         username = self.entry_username.get()
         password_lama = self.entry_pass_lama.get()

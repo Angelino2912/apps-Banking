@@ -98,6 +98,7 @@ class MainApp:
         tk.Button(self.card, text="Lihat Nasabah", width=28, command=self.lihat_nasabah,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Tambah Nasabah", width=28, command=self.tambah_nasabah,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Lihat Transaksi", width=28,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Ganti Password Nasabah", width=28,command=self.ganti_password,bg=top_color, fg="white", bd=0).pack(pady=6)
 
         # tombol kembali / logout
         tk.Button(self.card, text="Keluar", width=20, command=self.login_page,bg="#E53E3E", fg="white", bd=0).pack(pady=(12,0))
@@ -134,7 +135,7 @@ class MainApp:
         cols = [("no_rek", "No Rek", 140, "center"),
                 ("username_us", "Username", 220, "w"),
                 ("password_us", "Password", 180, "center"),
-                ("balance", "Saldo", 160, "e"),
+                ("balance", "Saldo", 160, "center"),
                 ("role_us", "Role", 120, "center")]
 
         table_frame = ttk.Frame(self.card)
@@ -236,7 +237,84 @@ class MainApp:
 
         tk.Button(self.root, text="Simpan", command=proses_tambah).pack(pady=10)
         tk.Button(self.root, text="Kembali", command=self.admin_login).pack(pady=5)
-    
+
+
+    def ganti_password(self):
+        self.clear_window()
+        self.root.title("Ganti Password Nasabah")
+        self.root.configure(bg="#2A1F3D")
+
+        tk.Label(self.root, text="Change Password Here BROOO !!!",font=("Arial", 16, "bold"), bg="#2A1F3D", fg="white").pack(pady=15)
+        tk.Label(self.root, text="Username Customer", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+
+        self.entry_username = tk.Entry(self.root, width=30)
+        self.entry_username.pack(pady=5)
+
+        tk.Label(self.root, text="Password Lama", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+
+        self.entry_pass_lama = tk.Entry(self.root, width=30, show="*")
+        self.entry_pass_lama.pack(pady=5)
+
+        tk.Label(self.root, text="Password Baru", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+
+        self.entry_pass_baru = tk.Entry(self.root, width=30, show="*")
+        self.entry_pass_baru.pack(pady=5)
+
+        tk.Label(self.root, text="Confirm Password baru", font=("Arial", 12), bg="#2A1F3D", fg="white").pack(pady=(10, 0))
+
+        self.entry_confirm_pass = tk.Entry(self.root, width=30, show="*")
+        self.entry_confirm_pass.pack(pady=5)
+
+        tk.Button(self.root, text="Ganti Password", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white",width=20,
+                command=self.proses_ganti).pack(pady=20)
+        
+        tk.Button(self.root, text="kembali", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white",width=20,command=self.admin_login).pack(pady=20)
+    def proses_ganti(self):
+        username = self.entry_username.get()
+        password_lama = self.entry_pass_lama.get()
+        password_baru = self.entry_pass_baru.get()
+        confirm_pass = self.entry_confirm_pass.get()
+
+        if not username or not password_lama or not password_baru:
+            # Jika username,password lama, password baru salah satu ada yang kosong maka akan true
+            # Jika true maka akan eror 
+            # ini untuk mencegah user mencoba ganti password baru tanpa mengisi password lama dan username
+            #  atau sebaliknya
+            messagebox.showerror("Error", "Semua field harus diisi!")
+            return
+        # return:
+        # Hentikan fungsi ini segera
+        # Jangan lanjut ke proses berikutnya
+        # Tidak melakukan pengecekan password lama
+        # Tidak meng-update password
+        # Tidak menyentuh database
+
+        if password_baru != confirm_pass:
+            # jika pass baru tidak sama dengan confirm pass maka akan eror
+            messagebox.showerror("Error", "Konfirmasi password tidak sama!")
+            return
+
+        userRepo = UserRepo()
+        success = userRepo.update_password(username, password_lama, password_baru)
+        # jika username dan pass lama benar = berhasil
+        # untuk menjalankan update password
+
+
+        if success:
+            # Berhasil → success = True
+            # Gagal → success = False
+            messagebox.showinfo("Success", "Password berhasil diganti!")
+            self.entry_pass_lama.delete(0, tk.END)
+            self.entry_pass_baru.delete(0, tk.END)
+            self.entry_confirm_pass.delete(0, tk.END)
+            # delete(0, tk.END) berarti:
+            # hapus dari karakter index 0 sampai akhir (tk.END)
+            # tujuanya agar password lama dan baru yang sudah diketik akan langsung hilang agar aman
+        else:
+            messagebox.showerror("Error", "Password lama salah atau user tidak ditemukan!")
+        
+     
+
 
     def cust_login(self):
         self.clear_window()

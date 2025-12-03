@@ -84,5 +84,22 @@ class UserRepo:
         sql = "SELECT description, amount, timestamp FROM history WHERE username_us=%s ORDER BY timestamp DESC"
         self.db.cursor.execute(sql, (username_us,))
         return self.db.cursor.fetchall()
+    
+    def update_password(self, username, password_lama, password_baru):
+        # Cek apakah username & password lama benar
+        sql_check = "SELECT username_us FROM datauser WHERE username_us=%s AND password_us=%s"
+        self.db.cursor.execute(sql_check, (username, password_lama))
+        user = self.db.cursor.fetchone()
+
+        if not user:
+            return False  # password lama salah
+
+        # Update password baru
+        sql_update = "UPDATE datauser SET password_us=%s WHERE username_us=%s"
+        self.db.cursor.execute(sql_update, (password_baru, username))
+        self.db.mydb.commit()
+
+        return True
+
 
    

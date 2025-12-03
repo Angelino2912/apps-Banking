@@ -4,6 +4,7 @@ from tkinter import ttk
 import datauser as us
 from tkinter import messagebox
 from datauser import UserRepo
+from datetime import datetime
 
 # pemilaian presentasi, penilaian laporan, nilai aplikasi, nilai konntribusi, nilai tanya jawab.
 
@@ -422,8 +423,11 @@ class MainApp:
         history_data = user_repo.get_history(self.current_user.username_us)
         
         if history_data:
-            for desc, amount, time in history_data:
-                history_box.insert(tk.END, f"{time} | {desc} | Rp {amount}")
+           
+    
+            for desc, amount, timestamp in history_data:
+                tampil = datetime.strptime(str(timestamp), "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M:%S")
+                history_box.insert(tk.END, f"{tampil} | {desc} | Rp {amount}")
         else:
             history_box.insert(tk.END, "Belum ada transaksi.")
         

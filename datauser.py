@@ -100,6 +100,11 @@ class UserRepo:
         self.db.mydb.commit()
 
         return True
+    
+    def get_all_history(self):
+        self.db.cursor.execute("SELECT username_us, description, amount, timestamp FROM history ORDER BY timestamp DESC")
+        return self.db.cursor.fetchall()
+
 
 
    

@@ -97,7 +97,7 @@ class MainApp:
         # tombol berwarna (pakai tk.Button agar warna konsisten)
         tk.Button(self.card, text="Lihat Nasabah", width=28, command=self.lihat_nasabah,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Tambah Nasabah", width=28, command=self.tambah_nasabah,bg=top_color, fg="white", bd=0).pack(pady=6)
-        tk.Button(self.card, text="Lihat Transaksi", width=28,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Lihat Transaksi", width=28, command=self.Lihat_transaksi_cust,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Ganti Password Nasabah", width=28,command=self.ganti_password,bg=top_color, fg="white", bd=0).pack(pady=6)
 
         # tombol kembali / logout
@@ -287,20 +287,76 @@ class MainApp:
         # jika username dan pass lama benar = berhasil
         # untuk menjalankan update password
 
-
         if success:
-            # Berhasil → success = True
-            # Gagal → success = False
+        #         # Berhasil → success = True
+        #         # Gagal → success = False
             messagebox.showinfo("Success", "Password berhasil diganti!")
             self.entry_pass_lama.delete(0, tk.END)
             self.entry_pass_baru.delete(0, tk.END)
             self.entry_confirm_pass.delete(0, tk.END)
-            # delete(0, tk.END) berarti:
-            # hapus dari karakter index 0 sampai akhir (tk.END)
-            # tujuanya agar password lama dan baru yang sudah diketik akan langsung hilang agar aman
+        #         # delete(0, tk.END) berarti:
+        #         # hapus dari karakter index 0 sampai akhir (tk.END)
+        #         # tujuanya agar password lama dan baru yang sudah diketik akan langsung hilang agar aman
         else:
             messagebox.showerror("Error", "Password lama salah atau user tidak ditemukan!")
         
+
+    def Lihat_transaksi_cust(self):
+        self.clear_window()
+
+        top_color = "#0BA68B"
+        bg_main = "#F5FAFC"
+
+        # header hijau
+        self.top_frame = tk.Frame(self.root, bg=top_color, height=72)
+        self.top_frame.pack(side="top", fill="x")
+        self.top_frame.pack_propagate(False)
+        ttk.Label(self.top_frame, text="Semua Transaksi Nasabah", background=top_color,
+                foreground="white", font=("Segoe UI", 18, "bold")).pack(pady=16)
+
+        # area utama
+        self.main_frame = tk.Frame(self.root, bg=bg_main)
+        self.main_frame.pack(fill="both", expand=True)
+
+        # kartu tabel
+        self.card = ttk.Frame(self.main_frame, padding=12)
+        self.card.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # style treeview
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=28, font=("Segoe UI", 10))
+        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
+
+        columns = ["Username", "Deskripsi", "Nominal", "Waktu"]
+        self.tree = ttk.Treeview(self.card, columns=columns, show="headings", height=12)
+        self.tree.pack(fill="both", expand=True)
+
+        for col in columns:
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=180, anchor="center")
+
+        # warna baris
+        self.tree.tag_configure("odd", background="#FFFFFF")
+        self.tree.tag_configure("even", background="#F3FFF9")
+
+        # AMBIL DATA TRANSAKSI DARI DATABASE
+        data = user_repo.get_all_history()   # ← kamu buat di repo
+
+        for i, row in enumerate(data):
+            username_us, description, amount, timestamp = row
+            waktu = datetime.strptime(str(timestamp), "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M:%S")
+
+            tag = "even" if i % 2 == 0 else "odd"
+            # Jika i % 2 == 0, berarti baris genap.
+            # Jika i % 2 != 0, berarti baris ganjil.
+            # ini untuk memberi warna tabel,jika ganjil dia backgroundnya hijau jika genap backgroundnya putih 
+            self.tree.insert("", "end", values=(username_us, description, f"Rp {amount:,}", waktu), tags=(tag,))
+
+        # tombol kembali
+        tk.Button(self.root, text="Kembali", command=self.admin_login, bg=top_color, 
+                fg="white", bd=0, width=20).pack(pady=10)
+
+       
      
 
 
@@ -332,7 +388,7 @@ class MainApp:
         tk.Button(self.card, text="Cek Saldo", width=28, command=self.cek_saldo,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Setor / Deposit", width=28, command=self.menu_deposit,bg=top_color, fg="white", bd=0).pack(pady=6)
         tk.Button(self.card, text="Tarik Tunai", width=28, command=self.menu_withdraw,bg=top_color, fg="white", bd=0).pack(pady=6)
-        tk.Button(self.card, text="Riwayat Transaksi", width=28, command=self.menu_history,bg=top_color, fg="white", bd=0).pack(pady=6)
+        tk.Button(self.card, text="Riwayat Transaksi", width=28, command=self.Riwayat_transaksi,bg=top_color, fg="white", bd=0).pack(pady=6)
         #command = tombol  buutton di klik akan menjalankan fungsi 
         # logout
         tk.Button(self.card, text="Logout", width=20, command=self.login_page,bg="#E53E3E", fg="white", bd=0).pack(pady=(12,0))
@@ -457,7 +513,7 @@ class MainApp:
         tk.Button(self.card, text="Tarik", command=proses,bg=top_color, fg="white", bd=0, width=20).pack(pady=(10,6))
         tk.Button(self.card, text="Kembali", command=self.cust_login,bg="#E53E3E", fg="white", bd=0, width=20).pack()
 
-    def menu_history(self):
+    def Riwayat_transaksi(self):
         self.clear_window()
 
         top_color = "#0BA68B"

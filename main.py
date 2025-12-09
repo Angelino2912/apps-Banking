@@ -552,11 +552,7 @@ class MainApp:
 	    for widget in self.root.winfo_children():
 	        widget.destroy()
 
-    # def clear_content(self):
-	#     if hasattr(self, "content_frame") and self.content_frame.winfo_exists():
-	#         for widget in self.content_frame.winfo_children():
-	#             widget.destroy()
-
+    
 
 
 root = Tk()

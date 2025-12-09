@@ -146,7 +146,11 @@ class MainApp:
         # isi data
         data_customer = user_repo.ambil_user()
         for i, row in enumerate(data_customer): #mengambil data dari databse sesuai list
-            saldo_text = f"Rp {int(row.balance):,.0f}" #format saldo dengan koma pada nominal
+            saldo_text = f"Rp {int(row.balance):,.0f}" 
+            # :,.0f memberi format:
+            # , → memberi pemisah ribuan
+            # .0f → tanpa angka desimal
+            #format saldo dengan koma pada nominal
             values = (row.no_rek, row.username_us, row.password_us, saldo_text, row.role_us) #menyusun data yang di tampilkan
             tag = "even" if i % 2 == 0 else "odd" #menentukan ganjil genap untuk pewarnaan nya biar cantik aja
             self.tree.insert("", "end", values=values, tags=(tag,))
@@ -154,15 +158,7 @@ class MainApp:
         # tombol kembali
         tk.Button(self.root, text="Kembali", command=self.admin_login,bg=top_color, fg="white", bd=0, width=20).pack(pady=10)
 
-    def load_data(self):
-        repo = UserRepo()
-        data = repo.ambil_semua_user()  
-
-        for item in self.tree.get_children():
-            self.tree.delete(item)
-
-        for row in data:
-            self.tree.insert("", "end", values=row)
+    
 
     def tambah_nasabah(self):
         self.clear_window()

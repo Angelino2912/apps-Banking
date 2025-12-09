@@ -48,11 +48,6 @@ class UserRepo:
             return DataUser(row[0], row[1], row[2], row[3])
         return None
     
-    def ambil_semua_user(self):
-        sql = "SELECT no_rek, username_us, balance, role_us FROM datauser"
-        self.db.cursor.execute(sql)
-        return self.db.cursor.fetchall()
-
     def tambah_user(self, user: DataUser):
         query = """
             INSERT INTO datauser (no_rek, username_us, password_us, balance, role_us)
